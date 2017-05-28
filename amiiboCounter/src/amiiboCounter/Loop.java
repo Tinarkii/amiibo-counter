@@ -2,7 +2,7 @@ package amiiboCounter;
 
 import java.util.Scanner;
 
-public class Loop {
+public abstract class Loop {
 
 	protected final int MEMORY = 100;
 	protected int stackMemory = MEMORY;
@@ -18,7 +18,22 @@ public class Loop {
 	protected String commands[];
 
 	public Loop() {
-		super();
+		System.out.println("The initial values have not been set. Would you like to use the amiibo presets? (Y/N)");
+		String answer = keyboard.nextLine().toLowerCase();
+		if(answer.equals("y")){
+			fillUnused(amiiboDefaults[0],amiiboDefaults[1],amiiboDefaults[2],amiiboDefaults[3],amiiboDefaults[4],amiiboDefaults[5],amiiboDefaults[6]);
+		}
+		else{
+			System.out.println("Please set up the initial values.");
+			lastAmiibos = setup();
+			fillUnused(lastAmiibos[0],lastAmiibos[1],lastAmiibos[2],lastAmiibos[3],lastAmiibos[4],lastAmiibos[5],lastAmiibos[6]);
+		}
+		System.out.println("Would you like to use the preset stack size (100)? (Y/N)");
+		answer = keyboard.nextLine().toLowerCase();
+		if(!answer.equals("y")){
+			System.out.println("Please indicate a stack size");
+			stackMemory = Integer.parseInt(keyboard.nextLine().toLowerCase());
+		}
 	}
 
 	protected int[] setup() {
@@ -89,8 +104,7 @@ public class Loop {
 		}
 	}
 	
-	protected void doLoop() {
-	}
+	protected abstract void doLoop();
 
 	public void stopLoop() {
 		stop = true;
@@ -154,6 +168,74 @@ public class Loop {
 		System.out.println("(" + written + " items)");
 		System.out.print(toPrint);
 		
+	}
+
+	protected void add(String type) {
+		Amiibo toAdd;
+		switch(type){
+		case "guardian":
+			toAdd = new Guardian();
+			break;
+		case "epona":
+			toAdd = new Epona();
+			break;
+		case "fish":
+			toAdd = new Fish();
+			break;
+		case "neslink":
+			toAdd = new NESLink();
+			break;
+		case "ootlink":
+			toAdd = new OOTLink();
+			break;
+		case "zelda":
+			toAdd = new Zelda();
+			break;
+		default:
+			toAdd = new Amiibo(type);
+		}
+		if(!take(unused,toAdd)){
+			System.out.println("\nThe specified Amiibo could not be found in the unused collection.");
+			System.out.println("Would you like to check the freed collection? (Y/N)");
+			String answer = keyboard.nextLine().toLowerCase();
+			if(answer.equals("y")){
+				if(!take(freed,toAdd)){
+					System.out.println("\nThe specified Amiibo could not be found in the freed collection.");
+					System.out.println("Would you like to add an unspecified Amiibo? (Y/N)");
+					answer = keyboard.nextLine().toLowerCase();
+					if(!answer.equals("y")){
+						return;
+					}
+				}
+			}
+			else{
+				System.out.println("Would you like to add an unspecified Amiibo? (Y/N)");
+				answer = keyboard.nextLine().toLowerCase();
+				if(!answer.equals("y")){
+					return;
+				}
+			}
+		}
+	
+		String extra = "";
+		if(pointer >= stack.length){
+			int i = 0;
+			while (freed[i] != null && i < freed.length){
+				i ++;
+				if(i >= freed.length){
+					System.out.println("\nThere seems to have been an error freeing an amiibo");
+				}
+			}
+			freed[i] = stack[pointer%stack.length];
+			extra = "\n" + stack[pointer%stack.length].getType() + " was freed from stack";
+			
+		}
+		
+		stack[pointer%stack.length] = toAdd;
+		System.out.println(toAdd.getType() + " (" + pointer + ")" + extra);
+		pointer ++;
+		
+	
 	}
 
 }

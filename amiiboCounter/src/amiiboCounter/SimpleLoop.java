@@ -1,38 +1,67 @@
 package amiiboCounter;
 
-public class WordyLoop extends Loop {
-	public WordyLoop(){
+public class SimpleLoop extends Loop {
+
+	public SimpleLoop(){
 		super();
-		commands = new String[]{"add [amiibo-type]: adds an amiibo to the stack"
-				+ "\n	(from the unused array of amiibos or from the freed list if there are none in the unused list)"
-				+ "\n	(guardian, epona, fish, neslink, ootlink, zelda, other)",
-				"show [list-name]: shows the contents of a given list"
-				+ "\n	(unused, stack, or freed, all/everything, if none of these, then all will be shown)",
-				"reset: resets all values "
-				+ "\n	(new empty arrays for stack and freed lists and prompts for new amiibo values for the unused list and new stack size)",
-				"commands: returns a list of commands"
-				+ "\n	(this list)"};
+		commands = new String[]{"g:	adds a guardian to the stack","e:	adds an epona to the stack","f:	adds a fish to the stack",
+				"n:	adds an 8-bit/neslink to the stack","o:	adds an ootlink to the stack","z:	adds a zelda to the stack",
+				"x:	adds a generic amiibo to the stack","sa:	shows all lists (unused, stack, and freed)","ss:	shows the stack",
+				"su:	shows the unused list","sf:	shows the freed list","r:	resets all values (stack, freed, and promtps concerning unused)",
+				"c:	lists the commands (this list)"};
 	}
 	
-	protected void doLoop(){
+	public void doLoop(){
 		System.out.print("Enter command--> ");
         String command = keyboard.nextLine().toLowerCase();
         System.out.println("");
         try{
-        	switch(command.split(" ")[0]){
-        		case "add":
+        	switch(command){
+        		case "g":
         			System.out.print("Adding: ");
-        			add(command.split(" ")[1]);
+        			add("guardian");
         			break;
-        		case "show":
+        		case "e":
+        			System.out.print("Adding: ");
+        			add("epona");
+        			break;
+        		case "f":
+        			System.out.print("Adding: ");
+        			add("fish");
+        			break;
+        		case "n":
+        			System.out.print("Adding: ");
+        			add("neslink");
+        			break;
+        		case "o":
+        			System.out.print("Adding: ");
+        			add("ootlink");
+        			break;
+        		case "z":
+        			System.out.print("Adding: ");
+        			add("zelda");
+        			break;
+        		case "x":
+        			System.out.print("Adding: ");
+        			add("generic");
+        			break;
+        		case "sa":
         			System.out.print("Showing: ");
-        			String arg = "";
-        			if(command.split(" ").length > 1){
-        				arg = command.split(" ")[1];
-        			}
-        			show(arg);
+        			show("all");
         			break;
-        		case "reset":
+        		case "ss":
+        			System.out.print("Showing: ");
+        			show("stack");
+        			break;
+        		case "su":
+        			System.out.print("Showing: ");
+        			show("unused");
+        			break;
+        		case "sf":
+        			System.out.print("Showing: ");
+        			show("freed");
+        			break;
+        		case "r":
         			System.out.println("resetting...");
         			System.out.println("Would you like to use the presets? (Y/N)");
         			String answer = keyboard.nextLine().toLowerCase();
@@ -60,7 +89,7 @@ public class WordyLoop extends Loop {
         			}
         			startLoop();
         			break;
-        		case "commands":
+        		case "c":
         			System.out.println("The commands are:");
         			listcommands();
         			break;
@@ -70,13 +99,14 @@ public class WordyLoop extends Loop {
         			if(answer.equals("y")){
         				listcommands();
         			}
-        		}
-        	System.out.println("");
+        	}
+            System.out.println("");
         }
         catch(NullPointerException e){
         	System.out.println("There seems to have been an issue");
         }
-        
-		sendLoop();
+        sendLoop();
 	}
+
+	
 }
