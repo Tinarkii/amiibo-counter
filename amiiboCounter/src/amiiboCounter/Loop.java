@@ -137,7 +137,7 @@ public abstract class Loop {
 		if(!(toShow.equals("all") || toShow.equals("everything"))){
 			System.out.print("Error: Showing ");
 		}
-		System.out.print("Everything");
+		System.out.println("Everything");
 		System.out.print("UNUSED:");
 		print(unused,0);
 		System.out.print("\nSTACK:");
@@ -160,7 +160,7 @@ public abstract class Loop {
 			if(array[(i + start)%array.length] != null){
 				toPrint += array[(i + start)%array.length].getType() + "		|	";
 				written ++;
-				if (written%5 == 0){
+				if (written%5 == 0 && i+1 < array.length){
 					toPrint += "\n";
 				}
 			}
